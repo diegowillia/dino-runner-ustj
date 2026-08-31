@@ -106,14 +106,12 @@ const BIRD_DUCK_Y = GROUND_Y - 60; // high bird: hits standing dino only, avoid 
 const BIRD_JUMP_Y = GROUND_Y - 38; // mid bird: hits standing and ducking dino, avoid by jumping
 const MILESTONE_FREEZE_FRAMES = 120; // ~2s at 60fps: how long score counting pauses at each 100
 const MAX_SCORE = 9999;
-const NIGHT_TRANSITION_FRAMES = 90; // ~1.5s at 60fps: how long the fade to/from night takes
-const NIGHT_TRANSITION_STEP = 1 / NIGHT_TRANSITION_FRAMES;
-const DAY_BG_V = 247; // #f7f7f7
-const NIGHT_BG_V = 83; // #535353
-const DAY_FG_V = 83; // #535353
-const NIGHT_FG_V = 247; // #f7f7f7
-const DAY_CLOUD_V = 199; // #c7c7c7
-const NIGHT_CLOUD_V = 131; // #838383
+const DAY_BG = '#f7f7f7';
+const NIGHT_BG = '#535353';
+const DAY_FG = '#535353';
+const NIGHT_FG = '#f7f7f7';
+const DAY_CLOUD = '#c7c7c7';
+const NIGHT_CLOUD = '#838383';
 
 let darkMode = localStorage.getItem('dino-dark-mode') === 'true';
 
@@ -125,14 +123,6 @@ function setDarkMode(enabled) {
 
 darkModeToggleEl.addEventListener('click', () => setDarkMode(!darkMode));
 setDarkMode(darkMode);
-
-function lerp(a, b, t) {
-  return a + (b - a) * t;
-}
-
-function gray(v) {
-  return `rgb(${v}, ${v}, ${v})`;
-}
 
 let speed = BASE_SPEED;
 let score = 0;
@@ -148,7 +138,6 @@ let awaitingName = false;
 let pendingScore = 0;
 let lastMilestone = 0;
 let milestoneFreezeFrames = 0;
-let nightBlend = 0; // 0 = full day, 1 = full night
 
 function triggerMilestone() {
   scoreEl.classList.remove('milestone');
@@ -465,15 +454,9 @@ function drawClouds(cloudColor) {
 }
 
 function draw() {
-  const target = darkMode ? 1 : 0;
-  if (nightBlend !== target) {
-    const step = Math.sign(target - nightBlend) * NIGHT_TRANSITION_STEP;
-    nightBlend = Math.abs(target - nightBlend) < NIGHT_TRANSITION_STEP ? target : nightBlend + step;
-  }
-
-  const bg = gray(Math.round(lerp(DAY_BG_V, NIGHT_BG_V, nightBlend)));
-  const fg = gray(Math.round(lerp(DAY_FG_V, NIGHT_FG_V, nightBlend)));
-  const cloudColor = gray(Math.round(lerp(DAY_CLOUD_V, NIGHT_CLOUD_V, nightBlend)));
+  const bg = darkMode ? NIGHT_BG : DAY_BG;
+  const fg = darkMode ? NIGHT_FG : DAY_FG;
+  const cloudColor = darkMode ? NIGHT_CLOUD : DAY_CLOUD;
 
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
