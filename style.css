@@ -82,16 +82,23 @@ body.night #dark-mode-toggle:active {
 #score.milestone {
   display: inline-block;
   animation: milestone-pulse 2s steps(1, end) 1;
+  --pulse-fg: #535353;
+  --pulse-bg: #f7f7f7;
+}
+
+body.night #score.milestone {
+  --pulse-fg: #f7f7f7;
+  --pulse-bg: #535353;
 }
 
 @keyframes milestone-pulse {
   0%, 50% {
     background: transparent;
-    color: #535353;
+    color: var(--pulse-fg);
   }
   25%, 75% {
-    background: #535353;
-    color: #f7f7f7;
+    background: var(--pulse-fg);
+    color: var(--pulse-bg);
   }
 }
 
@@ -156,7 +163,15 @@ body.night #name-entry {
   text-transform: uppercase;
   padding: 4px 6px;
   border: 1px solid #535353;
+  background: #f7f7f7;
+  color: #535353;
   width: 120px;
+}
+
+body.night #name-input {
+  border-color: #f7f7f7;
+  background: #535353;
+  color: #f7f7f7;
 }
 
 #save-score-btn {
@@ -174,7 +189,8 @@ body.night #name-entry {
   background: #e0e0e0;
 }
 
-#name-input.error {
+/* extra id keeps the error border winning over the body.night override above */
+#name-entry #name-input.error {
   border-color: #c0392b;
 }
 
@@ -202,6 +218,14 @@ body.night #name-entry {
 #skip-score-btn:hover {
   color: #535353;
   text-decoration: underline;
+}
+
+body.night #skip-score-btn {
+  color: #bbb;
+}
+
+body.night #skip-score-btn:hover {
+  color: #f7f7f7;
 }
 
 #app {
@@ -264,6 +288,25 @@ body.night #leaderboard {
   border: 2px solid #f7f7f7;
   height: 14px;
   border-radius: 0;
+}
+
+body.night #leaderboard-list {
+  scrollbar-color: #f7f7f7 #535353;
+}
+
+body.night #leaderboard-list::-webkit-scrollbar-track {
+  background: #535353;
+  border-left-color: #f7f7f7;
+}
+
+body.night #leaderboard-list::-webkit-scrollbar-thumb {
+  background: #f7f7f7;
+  border-color: #535353;
+}
+
+body.night #leaderboard-list::-webkit-scrollbar-button {
+  background: #f7f7f7;
+  border-color: #535353;
 }
 
 #leaderboard-list li {
