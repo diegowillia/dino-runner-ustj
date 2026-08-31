@@ -10,13 +10,57 @@ body {
   align-items: center;
   justify-content: center;
   background: #f7f7f7;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: 'JetBrains Mono', 'Courier New', Courier, monospace;
+  transition: background-color 1.5s ease;
+}
+
+body.night {
+  background: #535353;
+}
+
+#dark-mode-toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  font-family: 'JetBrains Mono', 'Courier New', Courier, monospace;
+  font-size: 22px;
+  line-height: 1;
+  background: #f7f7f7;
+  color: #535353;
+  border: 3px solid #535353;
+  box-shadow: 4px 4px 0 #535353;
+  border-radius: 0;
+  cursor: pointer;
+  transition: background-color 1.5s ease, color 1.5s ease, border-color 1.5s ease, box-shadow 1.5s ease;
+}
+
+#dark-mode-toggle:active {
+  box-shadow: 2px 2px 0 #535353;
+  transform: translate(2px, 2px);
+}
+
+body.night #dark-mode-toggle {
+  background: #535353;
+  color: #f7f7f7;
+  border-color: #f7f7f7;
+  box-shadow: 4px 4px 0 #f7f7f7;
+}
+
+body.night #dark-mode-toggle:active {
+  box-shadow: 2px 2px 0 #f7f7f7;
 }
 
 #game-container {
   position: relative;
   border: 1px solid #535353;
   height: 202px;
+  transition: border-color 1.5s ease;
+}
+
+#game-container.night {
+  border-color: #f7f7f7;
 }
 
 #game {
@@ -32,6 +76,11 @@ body {
   font-size: 16px;
   letter-spacing: 2px;
   user-select: none;
+  transition: color 1.5s ease;
+}
+
+#game-container.night #hud {
+  color: #f7f7f7;
 }
 
 #score.milestone {
@@ -69,6 +118,13 @@ body {
   background: rgba(247, 247, 247, 0.85);
   padding: 6px 14px;
   border: 1px solid #535353;
+  transition: background-color 1.5s ease, color 1.5s ease, border-color 1.5s ease;
+}
+
+body.night #message {
+  background: rgba(83, 83, 83, 0.85);
+  color: #f7f7f7;
+  border-color: #f7f7f7;
 }
 
 #message.hidden {
@@ -82,6 +138,13 @@ body {
   background: rgba(247, 247, 247, 0.95);
   border: 1px solid #535353;
   padding: 10px 16px;
+  transition: background-color 1.5s ease, color 1.5s ease, border-color 1.5s ease;
+}
+
+body.night #name-entry {
+  background: rgba(83, 83, 83, 0.95);
+  color: #f7f7f7;
+  border-color: #f7f7f7;
 }
 
 #name-entry.hidden {
@@ -161,6 +224,12 @@ body {
   border: 1px solid #535353;
   padding: 10px 12px;
   color: #535353;
+  transition: border-color 1.5s ease, color 1.5s ease;
+}
+
+body.night #leaderboard {
+  border-color: #f7f7f7;
+  color: #f7f7f7;
 }
 
 #leaderboard h2 {

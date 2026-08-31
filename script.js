@@ -1,5 +1,6 @@
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
+const gameContainerEl = document.getElementById('game-container');
 const scoreEl = document.getElementById('score');
 const messageEl = document.getElementById('message');
 const nameEntryEl = document.getElementById('name-entry');
@@ -8,6 +9,7 @@ const nameErrorEl = document.getElementById('name-error');
 const saveScoreBtn = document.getElementById('save-score-btn');
 const skipScoreBtn = document.getElementById('skip-score-btn');
 const leaderboardListEl = document.getElementById('leaderboard-list');
+const darkModeToggleEl = document.getElementById('dark-mode-toggle');
 
 let audioCtx = null;
 
@@ -104,6 +106,33 @@ const BIRD_DUCK_Y = GROUND_Y - 60; // high bird: hits standing dino only, avoid 
 const BIRD_JUMP_Y = GROUND_Y - 38; // mid bird: hits standing and ducking dino, avoid by jumping
 const MILESTONE_FREEZE_FRAMES = 120; // ~2s at 60fps: how long score counting pauses at each 100
 const MAX_SCORE = 9999;
+const NIGHT_TRANSITION_FRAMES = 90; // ~1.5s at 60fps: how long the fade to/from night takes
+const NIGHT_TRANSITION_STEP = 1 / NIGHT_TRANSITION_FRAMES;
+const DAY_BG_V = 247; // #f7f7f7
+const NIGHT_BG_V = 83; // #535353
+const DAY_FG_V = 83; // #535353
+const NIGHT_FG_V = 247; // #f7f7f7
+const DAY_CLOUD_V = 199; // #c7c7c7
+const NIGHT_CLOUD_V = 131; // #838383
+
+let darkMode = localStorage.getItem('dino-dark-mode') === 'true';
+
+function setDarkMode(enabled) {
+  darkMode = enabled;
+  localStorage.setItem('dino-dark-mode', String(enabled));
+  darkModeToggleEl.textContent = enabled ? '☼' : '☾';
+}
+
+darkModeToggleEl.addEventListener('click', () => setDarkMode(!darkMode));
+setDarkMode(darkMode);
+
+function lerp(a, b, t) {
+  return a + (b - a) * t;
+}
+
+function gray(v) {
+  return `rgb(${v}, ${v}, ${v})`;
+}
 
 let speed = BASE_SPEED;
 let score = 0;
@@ -119,6 +148,7 @@ let awaitingName = false;
 let pendingScore = 0;
 let lastMilestone = 0;
 let milestoneFreezeFrames = 0;
+let nightBlend = 0; // 0 = full day, 1 = full night
 
 function triggerMilestone() {
   scoreEl.classList.remove('milestone');
@@ -366,8 +396,8 @@ function update() {
   }
 }
 
-function drawGround() {
-  ctx.strokeStyle = '#535353';
+function drawGround(fg) {
+  ctx.strokeStyle = fg;
   ctx.lineWidth = 2;
   ctx.beginPath();
   ctx.moveTo(0, GROUND_Y);
@@ -375,8 +405,8 @@ function drawGround() {
   ctx.stroke();
 }
 
-function drawDino() {
-  ctx.fillStyle = '#535353';
+function drawDino(fg, bg) {
+  ctx.fillStyle = fg;
   if (dino.ducking) {
     const y = GROUND_Y - 25;
     ctx.fillRect(dino.x, y, 58, 25);
@@ -398,13 +428,13 @@ function drawDino() {
       ctx.fillRect(dino.x + 24, dino.y + dino.height - 8, 8, 8);
     }
     // eye
-    ctx.fillStyle = '#f7f7f7';
+    ctx.fillStyle = bg;
     ctx.fillRect(dino.x + 34, dino.y, 4, 4);
   }
 }
 
-function drawObstacles() {
-  ctx.fillStyle = '#535353';
+function drawObstacles(fg) {
+  ctx.fillStyle = fg;
   obstacles.forEach((o) => {
     if (o.type === 'cactus') {
       ctx.fillRect(o.x, o.y, o.width, o.height);
@@ -426,8 +456,8 @@ function drawObstacles() {
   });
 }
 
-function drawClouds() {
-  ctx.fillStyle = '#c7c7c7';
+function drawClouds(cloudColor) {
+  ctx.fillStyle = cloudColor;
   clouds.forEach((c) => {
     ctx.fillRect(c.x, c.y, c.width, 6);
     ctx.fillRect(c.x + 8, c.y - 4, c.width - 16, 6);
@@ -435,11 +465,26 @@ function drawClouds() {
 }
 
 function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawClouds();
-  drawGround();
-  drawObstacles();
-  drawDino();
+  const target = darkMode ? 1 : 0;
+  if (nightBlend !== target) {
+    const step = Math.sign(target - nightBlend) * NIGHT_TRANSITION_STEP;
+    nightBlend = Math.abs(target - nightBlend) < NIGHT_TRANSITION_STEP ? target : nightBlend + step;
+  }
+
+  const bg = gray(Math.round(lerp(DAY_BG_V, NIGHT_BG_V, nightBlend)));
+  const fg = gray(Math.round(lerp(DAY_FG_V, NIGHT_FG_V, nightBlend)));
+  const cloudColor = gray(Math.round(lerp(DAY_CLOUD_V, NIGHT_CLOUD_V, nightBlend)));
+
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  drawClouds(cloudColor);
+  drawGround(fg);
+  drawObstacles(fg);
+  drawDino(fg, bg);
+
+  gameContainerEl.classList.toggle('night', darkMode);
+  document.body.classList.toggle('night', darkMode);
 
   scoreEl.textContent =
     String(Math.floor(score)).padStart(5, '0') +
