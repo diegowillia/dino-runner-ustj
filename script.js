@@ -113,12 +113,23 @@ const NIGHT_FG = '#f7f7f7';
 const DAY_CLOUD = '#c7c7c7';
 const NIGHT_CLOUD = '#838383';
 
-let darkMode = localStorage.getItem('dino-dark-mode') === 'true';
+let darkMode = false;
+try {
+  darkMode = localStorage.getItem('dino-dark-mode') === 'true';
+} catch {
+  // storage blocked (private mode, site data disabled): fall back to light mode
+}
 
 function setDarkMode(enabled) {
   darkMode = enabled;
-  localStorage.setItem('dino-dark-mode', String(enabled));
+  try {
+    localStorage.setItem('dino-dark-mode', String(enabled));
+  } catch {
+    // preference just won't persist
+  }
   darkModeToggleEl.textContent = enabled ? '☼' : '☾';
+  gameContainerEl.classList.toggle('night', enabled);
+  document.body.classList.toggle('night', enabled);
 }
 
 darkModeToggleEl.addEventListener('click', () => setDarkMode(!darkMode));
@@ -126,7 +137,12 @@ setDarkMode(darkMode);
 
 let speed = BASE_SPEED;
 let score = 0;
-let highScore = Math.floor(Number(sessionStorage.getItem('dino-high-score')) || 0);
+let highScore = 0;
+try {
+  highScore = Math.floor(Number(sessionStorage.getItem('dino-high-score')) || 0);
+} catch {
+  // storage blocked: high score just starts at zero
+}
 let frame = 0;
 let running = false;
 let started = false;
@@ -182,7 +198,11 @@ function gameOver() {
   const flooredFinalScore = Math.floor(score);
   if (flooredFinalScore > highScore) {
     highScore = flooredFinalScore;
-    sessionStorage.setItem('dino-high-score', String(highScore));
+    try {
+      sessionStorage.setItem('dino-high-score', String(highScore));
+    } catch {
+      // high score just won't survive a reload
+    }
   }
   pendingScore = flooredFinalScore;
   awaitingName = true;
@@ -465,9 +485,6 @@ function draw() {
   drawGround(fg);
   drawObstacles(fg);
   drawDino(fg, bg);
-
-  gameContainerEl.classList.toggle('night', darkMode);
-  document.body.classList.toggle('night', darkMode);
 
   scoreEl.textContent =
     String(Math.floor(score)).padStart(5, '0') +
