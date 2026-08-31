@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dino Runner- USTJ</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <div id="game-container">
+      <canvas id="game" width="800" height="200"></canvas>
+      <div id="hud">
+        <span id="score">00000</span>
+      </div>
+      <div id="overlay">
+        <div id="name-entry" class="hidden">
+          <p>Fim de jogo! Digite seu nome:</p>
+          <input id="name-input" maxlength="10" autocomplete="off" />
+          <button id="save-score-btn">Salvar</button>
+          <button id="skip-score-btn">Pular</button>
+          <p id="name-error" class="hidden">Digite um nome para salvar!</p>
+        </div>
+        <p id="message">Pressione ESPAÇO para começar</p>
+      </div>
+    </div>
+    <aside id="leaderboard">
+      <h2>Ranking</h2>
+      <ol id="leaderboard-list"></ol>
+    </aside>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
