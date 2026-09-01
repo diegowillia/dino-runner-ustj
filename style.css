@@ -328,47 +328,63 @@ body.night #leaderboard-list::-webkit-scrollbar-button {
   text-align: center;
 }
 
-#touch-controls {
+#duck-btn,
+#jump-btn {
   display: none;
+  position: fixed;
+  align-items: center;
   justify-content: center;
-  gap: 14px;
-  padding: 10px 0;
-  border-top: 1px solid #535353;
-}
-
-#game-container.night #touch-controls {
-  border-top-color: #f7f7f7;
-}
-
-#touch-controls button {
+  bottom: calc(20px + env(safe-area-inset-bottom));
+  width: 64px;
+  height: 64px;
   font-family: 'JetBrains Mono', 'Courier New', Courier, monospace;
-  font-size: 20px;
-  width: 56px;
-  height: 44px;
-  background: rgba(247, 247, 247, 0.85);
+  font-size: 26px;
+  background: rgba(247, 247, 247, 0.9);
   color: #535353;
   border: 2px solid #535353;
-  border-radius: 0;
+  border-radius: 50%;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+  z-index: 20;
 }
 
-body.night #touch-controls button {
-  background: rgba(83, 83, 83, 0.85);
+#duck-btn {
+  left: calc(20px + env(safe-area-inset-left));
+}
+
+#jump-btn {
+  right: calc(20px + env(safe-area-inset-right));
+}
+
+body.night #duck-btn,
+body.night #jump-btn {
+  background: rgba(83, 83, 83, 0.9);
   color: #f7f7f7;
   border-color: #f7f7f7;
 }
 
 @media (max-width: 900px), (pointer: coarse) {
-  #touch-controls {
+  #duck-btn,
+  #jump-btn {
     display: flex;
   }
 }
 
 @media (max-width: 900px) {
+  html,
   body {
-    align-items: flex-start;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
+  body {
+    align-items: stretch;
+    justify-content: flex-start;
+    padding: 12px 12px calc(96px + env(safe-area-inset-bottom)) 12px;
+    touch-action: manipulation;
   }
 
   #app {
@@ -376,12 +392,15 @@ body.night #touch-controls button {
     align-items: center;
     width: 100%;
     max-width: 800px;
-    gap: 20px;
+    height: 100%;
+    gap: 12px;
+    margin: 0 auto;
   }
 
   #game-container {
     width: 100%;
     height: auto;
+    flex-shrink: 0;
   }
 
   #game {
@@ -393,6 +412,13 @@ body.night #touch-controls button {
   #leaderboard {
     width: 100%;
     height: auto;
-    max-height: 180px;
+    flex: 1;
+    min-height: 0;
+  }
+
+  #message {
+    font-size: 12px;
+    padding: 4px 8px;
+    white-space: nowrap;
   }
 }
