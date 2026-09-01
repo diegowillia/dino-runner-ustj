@@ -400,8 +400,9 @@ body.night #jump-btn {
 
   #game-container {
     width: 100%;
-    flex: 0 1 420px;
-    min-height: 0;
+    height: auto;
+    aspect-ratio: 3.2 / 1;
+    flex-shrink: 0;
   }
 
   #game {
