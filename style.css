@@ -390,6 +390,7 @@ body.night #jump-btn {
   #app {
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     width: 100%;
     max-width: 800px;
     height: 100%;
@@ -399,21 +400,19 @@ body.night #jump-btn {
 
   #game-container {
     width: 100%;
-    height: auto;
-    flex-shrink: 0;
+    flex: 0 1 420px;
+    min-height: 0;
   }
 
   #game {
     width: 100%;
-    height: auto;
-    aspect-ratio: 800 / 200;
+    height: 100%;
   }
 
   #leaderboard {
     width: 100%;
-    height: auto;
-    flex: 1;
-    min-height: 0;
+    height: 120px;
+    flex-shrink: 0;
   }
 
   #message {
