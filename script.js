@@ -214,6 +214,14 @@ function gameOver() {
   nameInputEl.focus();
 }
 
+const touchControlsQuery = window.matchMedia('(max-width: 900px), (pointer: coarse)');
+
+function restartMessage() {
+  return touchControlsQuery.matches
+    ? 'Pressione uma das setas para reiniciar'
+    : 'Pressione ESPAÇO para reiniciar';
+}
+
 async function submitName() {
   const name = nameInputEl.value.trim();
   if (!name) {
@@ -227,13 +235,13 @@ async function submitName() {
   messageEl.textContent = 'Salvando pontuação...';
   messageEl.classList.remove('hidden');
   await saveScore(name.toUpperCase().slice(0, 10), pendingScore);
-  messageEl.textContent = 'Pressione ESPAÇO para reiniciar';
+  messageEl.textContent = restartMessage();
 }
 
 function skipNameEntry() {
   awaitingName = false;
   nameEntryEl.classList.add('hidden');
-  messageEl.textContent = 'Pressione ESPAÇO para reiniciar';
+  messageEl.textContent = restartMessage();
   messageEl.classList.remove('hidden');
 }
 
@@ -525,6 +533,10 @@ function loop() {
   draw();
   requestAnimationFrame(loop);
 }
+
+messageEl.textContent = touchControlsQuery.matches
+  ? 'Pressione uma das setas para começar'
+  : 'Pressione ESPAÇO para começar';
 
 renderLeaderboard();
 draw();
