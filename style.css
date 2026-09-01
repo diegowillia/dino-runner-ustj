@@ -5,12 +5,13 @@
 }
 
 body {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #f7f7f7;
   font-family: 'JetBrains Mono', 'Courier New', Courier, monospace;
+  padding: 16px 12px;
 }
 
 body.night {
@@ -63,6 +64,7 @@ body.night #dark-mode-toggle:active {
 #game {
   display: block;
   background: #f7f7f7;
+  touch-action: none;
 }
 
 #hud {
@@ -324,4 +326,73 @@ body.night #leaderboard-list::-webkit-scrollbar-button {
 
 #leaderboard-list li span.lb-score {
   text-align: center;
+}
+
+#touch-controls {
+  display: none;
+  justify-content: center;
+  gap: 14px;
+  padding: 10px 0;
+  border-top: 1px solid #535353;
+}
+
+#game-container.night #touch-controls {
+  border-top-color: #f7f7f7;
+}
+
+#touch-controls button {
+  font-family: 'JetBrains Mono', 'Courier New', Courier, monospace;
+  font-size: 20px;
+  width: 56px;
+  height: 44px;
+  background: rgba(247, 247, 247, 0.85);
+  color: #535353;
+  border: 2px solid #535353;
+  border-radius: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+body.night #touch-controls button {
+  background: rgba(83, 83, 83, 0.85);
+  color: #f7f7f7;
+  border-color: #f7f7f7;
+}
+
+@media (max-width: 900px), (pointer: coarse) {
+  #touch-controls {
+    display: flex;
+  }
+}
+
+@media (max-width: 900px) {
+  body {
+    align-items: flex-start;
+  }
+
+  #app {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 800px;
+    gap: 20px;
+  }
+
+  #game-container {
+    width: 100%;
+    height: auto;
+  }
+
+  #game {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 800 / 200;
+  }
+
+  #leaderboard {
+    width: 100%;
+    height: auto;
+    max-height: 180px;
+  }
 }

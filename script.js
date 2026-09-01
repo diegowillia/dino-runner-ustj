@@ -293,6 +293,33 @@ document.addEventListener('keyup', (e) => {
 });
 
 canvas.addEventListener('mousedown', jump);
+canvas.addEventListener('touchstart', (e) => {
+  e.preventDefault();
+  jump();
+}, { passive: false });
+
+const duckBtnEl = document.getElementById('duck-btn');
+const jumpBtnEl = document.getElementById('jump-btn');
+
+jumpBtnEl.addEventListener('touchstart', (e) => {
+  e.preventDefault();
+  jump();
+}, { passive: false });
+
+duckBtnEl.addEventListener('touchstart', (e) => {
+  e.preventDefault();
+  setDuck(true);
+}, { passive: false });
+
+duckBtnEl.addEventListener('touchend', (e) => {
+  e.preventDefault();
+  setDuck(false);
+});
+
+duckBtnEl.addEventListener('touchcancel', (e) => {
+  e.preventDefault();
+  setDuck(false);
+});
 
 function spawnObstacle() {
   const roll = Math.random();
